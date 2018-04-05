@@ -1,4 +1,4 @@
-#TO REVISE AND/OR DELETE
+#TO REVISE OR DELETE
 
 
 from flask import Flask, Response, render_template, request, jsonify
