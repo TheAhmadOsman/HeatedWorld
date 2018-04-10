@@ -1,2 +1,4 @@
 *.secret
 __pycache__/
+*.log
+*.csv

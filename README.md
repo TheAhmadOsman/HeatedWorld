@@ -2,10 +2,9 @@
 * Fetching news from Reddit; /r/worldnews
   * https://www.reddit.com/dev/api/
     * [PRAW](https://github.com/praw-dev/praw) - [Documentation](https://praw.readthedocs.io/en/latest/)
-  * Top 80 articles in the last 24 hours
-  * Top 80 articles in the last 7 days
-* Getting news headline, description, and source location
-  * https://newsapi.org
+  * Top 60 articles in the last 24 hours
+  * Top 100 articles in the last 7 days
+    * Arranged based on a base scored...
 * Extracting geographical info
   * https://github.com/Corollarium/geograpy2
 * Creating world heatmap
