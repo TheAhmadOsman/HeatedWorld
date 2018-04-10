@@ -16,14 +16,15 @@
 import logging
 import praw
 import csv
+import config
 
 # Reddit Client Variables
 USERAGENT = ("NewsMaps 1.0 by /u/XMasterrrr" +
              "https://github.com/Ahmad-Magdy-Osman/NewsMaps")
-CLIENT_ID = ""
-CLIENT_SECRET = ""
-USERNAME = ""
-PASSWORD = ""
+CLIENT_ID = config.CLIENT_ID
+CLIENT_SECRET = config.CLIENT_SECRET
+USERNAME = config.USERNAME
+PASSWORD = config.PASSWORD
 
 
 class Reddit:
