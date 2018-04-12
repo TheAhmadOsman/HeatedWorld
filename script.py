@@ -26,9 +26,24 @@ def main():
 
     logging.info("--------------------")
     logging.info("-------------\n")
-
     logging.info("Script starting...")
-    logging.info("Initiating client...")
+
+    logging.info("Initiating client for the day's submssions...")
+    # subreddit followed by day/week
+    reddit = Reddit("worldnews", "day")
+    logging.info("Client initiated.")
+
+    logging.info("Fetching...")
+    reddit.fetch(100)
+    logging.info("Fetched.")
+
+    logging.info("Saving data to CSV...")
+    reddit.save()
+    logging.info("Saved day's submissions.\n")
+
+    logging.info("----------------------------------------------\n")
+
+    logging.info("Initiating client for the week's submssions...")
     # subreddit followed by day/week
     reddit = Reddit("worldnews", "week")
     logging.info("Client initiated.")
@@ -39,9 +54,9 @@ def main():
 
     logging.info("Saving data to CSV...")
     reddit.save()
-    logging.info("Saved.")
-    logging.info("Script finished.\n")
+    logging.info("Saved week's submissions.")
 
+    logging.info("Script finished.\n")
     logging.info("-------------")
     logging.info("--------------------\n")
 

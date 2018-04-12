@@ -17,6 +17,7 @@ import logging
 import praw
 import csv
 import config
+import time
 
 # Reddit Client Variables
 USERAGENT = ("NewsMaps 1.0 by /u/XMasterrrr" +
@@ -83,15 +84,17 @@ class Reddit:
             'created_utc': 1523267587.0,
             'ups': 48748,
             'num_comments': 2287}'''
-            self._submissions[submission.ups] = [submission.title, submission.score, submission.permalink, submission.url,
-                                                 submission.domain, submission.created, submission.created_utc, submission.ups, submission.num_comments]
+            submission_days = (
+                (time.time() - (submission.created_utc - 60*60)) // (24*60*60)) + 1
+            self._submissions[submission.score] = [submission.title, submission.score, submission_days, ("https://www.reddit.com/" + submission.permalink),
+                                                   submission.url, submission.domain, submission.created_utc, submission.num_comments]
 
     def save(self):
         logging.info("Ongoing...")
         with open(self._filename, 'w') as csvfile:
-            fieldnames = ["title", "score", "permalink", "url", "domain",
-                          "created", "created_utc", "ups", "num_comments"]
+            fieldnames = ["title", "score", "submission_days", "permalink", "url",
+                          "domain", "created_utc", "num_comments"]
             out = csv.writer(csvfile, delimiter='\t')
             out.writerow(fieldnames)
-            for key, value in self._submissions.items():
+            for value in self._submissions.values():
                 out.writerow(value)
