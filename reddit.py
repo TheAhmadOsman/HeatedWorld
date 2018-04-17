@@ -14,10 +14,11 @@
 #############################################################################
 
 import logging
-import praw
 import csv
-import config
 import time
+import config
+import praw
+from newspaper import Article
 
 # Reddit Client Variables
 USERAGENT = ("NewsMaps 1.0 by /u/XMasterrrr" +
@@ -84,16 +85,50 @@ class Reddit:
             'created_utc': 1523267587.0,
             'ups': 48748,
             'num_comments': 2287}'''
-            submission_days = (
-                (time.time() - (submission.created_utc - 60*60)) // (24*60*60)) + 1
-            self._submissions[submission.score] = [submission.title, submission.score, submission_days, ("https://www.reddit.com/" + submission.permalink),
+
+            if self._time == "week":
+                submission_days = (
+                    (time.time() - (submission.created_utc - 60*61)) // (24*60*60)) + 1
+                # Removing duplicates between "day" and "week" headlines
+                if submission_days == 1:
+                    continue
+                # Calculating score for each headline based on 1-(n/7).
+                elif submission_days > 7:
+                    submission_days = 7
+                    calculated_score = int(submission.score * 1/7)
+                elif submission_days > 1 and submission_days < 7:
+                    calculated_score = int(
+                        submission.score * (1 - (submission_days/7)))
+                else:
+                    calculated_score = submission.score
+            else:
+                submission_days = 1
+                calculated_score = submission.score
+
+            self._submissions[calculated_score] = [calculated_score, submission.score, submission.title, submission_days, ("https://www.reddit.com/" + submission.permalink),
                                                    submission.url, submission.domain, submission.created_utc, submission.num_comments]
+
+    def get_context(self):
+        logging.info("Ongoing...")
+        for value in self._submissions.values():
+            try:
+                article = Article(value[5])
+                article.download()
+                article.parse()
+                article.nlp()
+                value.append(article.authors)
+                value.append(article.text)
+                value.append(article.top_image)
+                value.append(article.summary)
+                value.append(article.keywords)
+            except Exception as e:
+                logging.info("Error: " + str(e))
 
     def save(self):
         logging.info("Ongoing...")
         with open(self._filename, 'w') as csvfile:
-            fieldnames = ["title", "score", "submission_days", "permalink", "url",
-                          "domain", "created_utc", "num_comments"]
+            fieldnames = ["calculated_score", "submission.score", "submission.title", "submission_days", "submission.permalink", "submission.url", "submission.domain",
+                          "submission.created_utc", "submission.num_comments", "article.authors", "article.text", "article.top_image", "article.summary", "article.keywords"]
             out = csv.writer(csvfile, delimiter='\t')
             out.writerow(fieldnames)
             for value in self._submissions.values():

@@ -17,7 +17,15 @@
 #############################################################################
 
 import logging
+import json
 from reddit import Reddit
+
+
+def save_json(day, week):
+    logging.info("Ongoing...")
+    with open('data.json', 'w') as outfile:
+        json.dump(day._submissions, outfile)
+        json.dump(week._submissions, outfile)
 
 
 def main():
@@ -30,31 +38,45 @@ def main():
 
     logging.info("Initiating client for the day's submssions...")
     # subreddit followed by day/week
-    reddit = Reddit("worldnews", "day")
+    redditDay = Reddit("worldnews", "day")
     logging.info("Client initiated.")
 
     logging.info("Fetching...")
-    reddit.fetch(100)
+    redditDay.fetch(40)
     logging.info("Fetched.")
 
+    logging.info("Getting context...")
+    redditDay.get_context()
+    logging.info("Context saved.")
+
     logging.info("Saving data to CSV...")
-    reddit.save()
+    redditDay.save()
     logging.info("Saved day's submissions.\n")
 
     logging.info("----------------------------------------------\n")
 
     logging.info("Initiating client for the week's submssions...")
     # subreddit followed by day/week
-    reddit = Reddit("worldnews", "week")
+    redditWeek = Reddit("worldnews", "week")
     logging.info("Client initiated.")
 
     logging.info("Fetching...")
-    reddit.fetch(100)
+    redditWeek.fetch(100)
     logging.info("Fetched.")
 
+    logging.info("Getting context...")
+    redditWeek.get_context()
+    logging.info("Context saved.")
+
     logging.info("Saving data to CSV...")
-    reddit.save()
-    logging.info("Saved week's submissions.")
+    redditWeek.save()
+    logging.info("Saved week's submissions.\n")
+
+    logging.info("----------------------------------------------\n")
+
+    logging.info("Saving to JSON file...")
+    save_json(redditDay, redditWeek)
+    logging.info(("Saved JSON file."))
 
     logging.info("Script finished.\n")
     logging.info("-------------")
