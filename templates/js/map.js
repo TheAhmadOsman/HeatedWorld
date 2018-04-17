@@ -22,6 +22,10 @@ function map(){
         //expected arrangment: {"countryName": {"fillColor": #colorcode, "numberOfWhatever": num}}
         let dataSet = {}
 
+/*        for(let item in rawDataSet){
+          dataSet[getIsoThree(item)] = rawDataSet[item]
+        }*/
+
         let values = []
 
         //fetching values to determine min/max
