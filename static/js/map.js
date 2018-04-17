@@ -15,10 +15,13 @@ function map(){
         var minValue = Math.min(...values)
         var maxValue = Math.max(...values)
 
+        var minColor = "#FFFFB2"
+        var maxColor = "#BD0026"
+
         //using d3 scale module to build a scale between dark green (light) and dark red (heavy)
         var colorScale = d3.scale.linear()
           .domain([minValue, maxValue])
-          .range(["#FFFFB2","#BD0026"])
+          .range([minColor, maxColor])
 
         var halfWay = Math.round((maxValue - minValue) * .5)
         var two = Math.round((maxValue - minValue) * .25)
@@ -34,11 +37,12 @@ function map(){
           }
           dataSet[getIsoThree(country)] = {"fillColor": colorScale(val), "numberOfWhatever": val}
         }
-/*        for (let item in isoCountries){
-          if (item in key){
-            console.log(item)
+        for (let item in isoCountries){
+          if (getIsoThree(item) in dataSet){}
+          else{
+            dataSet[getIsoThree(item)] = {"fillColor": minColor, "numberOfWhatever": 0}
           }
-        }*/
+        }
 
         //generate a map
         var map =  new Datamap({
