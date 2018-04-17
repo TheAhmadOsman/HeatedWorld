@@ -105,22 +105,22 @@ class Reddit:
                 submission_days = 1
                 calculated_score = submission.score
 
-            self._submissions[calculated_score] = [calculated_score, submission.score, submission.title, submission_days, ("https://www.reddit.com/" + submission.permalink),
-                                                   submission.url, submission.domain, submission.created_utc, submission.num_comments]
+            self._submissions[calculated_score] = {"calculated_score": calculated_score, "submission.score": submission.score, "submission.title": submission.title, "submission_days": submission_days, "submission.permalink": (
+                "https: // www.reddit.com /" + submission.permalink), "submission.url": submission.url, "submission.domain": submission.domain, "submission.created_utc": submission.created_utc, "submission.num_comments": submission.num_comments}
 
     def get_context(self):
         logging.info("Ongoing...")
         for value in self._submissions.values():
             try:
-                article = Article(value[5])
+                article = Article(value["submission.url"])
                 article.download()
                 article.parse()
                 article.nlp()
-                value.append(article.authors)
-                value.append(article.text)
-                value.append(article.top_image)
-                value.append(article.summary)
-                value.append(article.keywords)
+                value["article.authors"] = article.authors
+                value["article.text"] = article.text
+                value["article.top_image"] = article.top_image
+                value["article.summary"] = article.summary
+                value["article.keywords"] = article.keywords
             except Exception as e:
                 logging.info("Error: " + str(e))
 
@@ -132,4 +132,4 @@ class Reddit:
             out = csv.writer(csvfile, delimiter='\t')
             out.writerow(fieldnames)
             for value in self._submissions.values():
-                out.writerow(value)
+                out.writerow(value.values())

@@ -33,8 +33,8 @@ def main():
                         format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 
     logging.info("--------------------")
-    logging.info("-------------\n")
-    logging.info("Script starting...")
+    logging.info("-------------")
+    logging.info("Script starting...\n")
 
     logging.info("Initiating client for the day's submssions...")
     # subreddit followed by day/week
@@ -76,9 +76,9 @@ def main():
 
     logging.info("Saving to JSON file...")
     save_json(redditDay, redditWeek)
-    logging.info(("Saved JSON file."))
+    logging.info(("Saved JSON file.\n"))
 
-    logging.info("Script finished.\n")
+    logging.info("Script finished.")
     logging.info("-------------")
     logging.info("--------------------\n")
 
