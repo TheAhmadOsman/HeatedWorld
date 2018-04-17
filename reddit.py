@@ -18,7 +18,9 @@ import csv
 import time
 import config
 import praw
+
 from newspaper import Article
+from geotext import GeoText
 
 # Reddit Client Variables
 USERAGENT = ("NewsMaps 1.0 by /u/XMasterrrr" +
@@ -43,6 +45,7 @@ class Reddit:
         self.redditClient()
         self._submissions = {}
         self._filename = self._subreddit + "_" + self._time + ".csv"
+        self._countries = {}
 
     @property
     def subreddit(self):
@@ -118,9 +121,20 @@ class Reddit:
                 article.nlp()
                 value["article.authors"] = article.authors
                 value["article.text"] = article.text
+
+                places = GeoText(article.text)
+                for country in set(places.countries):
+                    if not str(country) in self._countries:
+                        self._countries[str(
+                            country)] = value["calculated_score"]
+                    else:
+                        self._countries[str(
+                            country)] += value["calculated_score"]
+
                 value["article.top_image"] = article.top_image
                 value["article.summary"] = article.summary
                 value["article.keywords"] = article.keywords
+                value["article.countries"] = places.countries
             except Exception as e:
                 logging.info("Error: " + str(e))
 
@@ -128,7 +142,7 @@ class Reddit:
         logging.info("Ongoing...")
         with open(self._filename, 'w') as csvfile:
             fieldnames = ["calculated_score", "submission.score", "submission.title", "submission_days", "submission.permalink", "submission.url", "submission.domain",
-                          "submission.created_utc", "submission.num_comments", "article.authors", "article.text", "article.top_image", "article.summary", "article.keywords"]
+                          "submission.created_utc", "submission.num_comments", "article.authors", "article.text", "article.top_image", "article.summary", "article.keywords", "article.countries"]
             out = csv.writer(csvfile, delimiter='\t')
             out.writerow(fieldnames)
             for value in self._submissions.values():

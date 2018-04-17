@@ -1,8 +1,6 @@
-#!/usr/local/bin/python3
-
 #############################################################################
 #   Author: Ahmad M. Osman                                                  #
-#   Date: 04/10/2018                                                        #
+#   Date: 04/17/2018                                                        #
 #                                                                           #
 #   Project: NewsMaps                                                       #
 #   Purpose: World News' Heat Maps.                                         #
@@ -10,15 +8,26 @@
 #                           https://www.newsmaps.xyz                        #
 #                  https://github.com/Ahmad-Magdy-Osman/NewsMaps            #
 #                                                                           #
-#   Filename: script.py                                                     #
-#   File functionality: This script executes all the steps to prepare       #
+#   Filename: newsmaps.py                                                   #
+#   File functionality: This file executes all necessary steps to prepare   #
 #                       Date to be visualized on NewsMaps.xyz               #
 #                                                                           #
 #############################################################################
 
 import logging
+import time
 import json
+import requests
+import atexit
+
+from flask import Flask, Response, render_template, request, jsonify
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.triggers.interval import IntervalTrigger
+
 from reddit import Reddit
+
+
+app = Flask(__name__)
 
 
 def save_json(day, week):
@@ -28,8 +37,14 @@ def save_json(day, week):
         json.dump(week._submissions, outfile)
 
 
-def main():
-    logging.basicConfig(filename='script.log', level=logging.INFO,
+def save_json_map(week):
+    logging.info("Ongoing...")
+    with open('map.json', 'w') as outfile:
+        json.dump(week._countries, outfile)
+
+
+def map_elements():
+    logging.basicConfig(filename='newsmaps.log', level=logging.INFO,
                         format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 
     logging.info("--------------------")
@@ -78,10 +93,31 @@ def main():
     save_json(redditDay, redditWeek)
     logging.info(("Saved JSON file.\n"))
 
+    ###
+    save_json_map(redditWeek)
+
     logging.info("Script finished.")
     logging.info("-------------")
     logging.info("--------------------\n")
 
 
-if __name__ == "__main__":
-    main()
+map_elements()
+scheduler = BackgroundScheduler()
+scheduler.start()
+scheduler.add_job(
+    func=map_elements,
+    trigger=IntervalTrigger(weeks=1),
+    id='getting_elements',
+    name='getting elements',
+    replace_existing=True)
+# Shut down the scheduler when exiting the app
+atexit.register(lambda: scheduler.shutdown())
+
+
+@app.route('/')
+def homepage():
+    return render_template("index.html")
+
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5001)
