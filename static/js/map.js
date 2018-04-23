@@ -8,6 +8,8 @@ function map(){
         let values = []
 
         //fetching values to determine min/max
+        readJSON("../maps.json")
+
         for (let item in valueDict){
           values.push(valueDict[item])
         }
