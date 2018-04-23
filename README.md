@@ -1,4 +1,4 @@
-# [HeatedWorld](https://www.heated.world) - [www.heated.world](www.heated.world)
+# [HeatedWorld](https://www.heated.world) - [www.heated.world](https://www.heated.world)
 * Fetching news from Reddit; /r/worldnews
   * https://www.reddit.com/dev/api/
     * [PRAW](https://github.com/praw-dev/praw) - [Documentation](https://praw.readthedocs.io/en/latest/)
