@@ -176,7 +176,7 @@ class Reddit:
 
     def save(self):
         logging.info("Ongoing...")
-        with open(self._filename, 'w') as csvfile:
+        with open(str("data/" + self._filename), 'w') as csvfile:
             fieldnames = ["calculated_score", "submission.score", "submission.title", "submission_days", "submission.permalink", "submission.url", "submission.domain",
                           "submission.created_utc", "submission.num_comments", "article.authors", "article.text", "article.top_image", "article.summary", "article.keywords", "article.countries"]
             out = csv.writer(csvfile, delimiter='\t')

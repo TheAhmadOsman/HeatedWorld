@@ -19,6 +19,7 @@ import time
 import json
 import requests
 import atexit
+import os
 
 from flask import Flask, Response, render_template, request, jsonify
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -30,22 +31,22 @@ from reddit import Reddit
 app = Flask(__name__)
 
 
-def save_json(day, week):
+def submissions_json(day, week):
     logging.info("Ongoing...")
     # Combining day's submissions and week's into one dictionary
     submissions = {**day.submissions, **week.submissions}
-    with open('data.json', 'w') as outfile:
+    with open('data/submissions.json', 'w') as outfile:
         json.dump(submissions, outfile)
 
 
-def save_json_map(week):
+def heatmap_json(week):
     logging.info("Ongoing...")
-    with open('map.json', 'w') as outfile:
+    with open('data/mapvotes.json', 'w') as outfile:
         json.dump(week.countries, outfile)
 
 
 def heatedworld():
-    logging.basicConfig(filename='heatedworld.log', level=logging.INFO,
+    logging.basicConfig(filename='data/heatedworld.log', level=logging.INFO,
                         format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 
     logging.info("--------------------")
@@ -58,7 +59,7 @@ def heatedworld():
     logging.info("Client initiated.")
 
     logging.info("Fetching...")
-    redditDay.fetch(40)
+    redditDay.fetch(50)
     logging.info("Fetched.")
 
     logging.info("Getting context...")
@@ -77,7 +78,7 @@ def heatedworld():
     logging.info("Client initiated.")
 
     logging.info("Fetching...")
-    redditWeek.fetch(100)
+    redditWeek.fetch(120)
     logging.info("Fetched.")
 
     logging.info("Getting context...")
@@ -91,17 +92,19 @@ def heatedworld():
     logging.info("----------------------------------------------\n")
 
     logging.info("Saving to JSON file...")
-    save_json(redditDay, redditWeek)
+    submissions_json(redditDay, redditWeek)
     logging.info(("Saved JSON file.\n"))
 
     ###
-    save_json_map(redditWeek)
+    heatmap_json(redditWeek)
 
     logging.info("Script finished.")
     logging.info("-------------")
     logging.info("--------------------\n")
 
 
+if not os.path.exists("data"):
+    os.mkdir("data")
 heatedworld()
 scheduler = BackgroundScheduler()
 scheduler.start()

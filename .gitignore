@@ -1,11 +1,8 @@
-*.secret
 __pycache__/
-*.log
-*.csv
-*.json
-config.py
-.vscode
-geonames_index.tar.gz
-/geonames_index
-wget_log.txt
+
 others
+data
+
+config.py
+
+.vscode
