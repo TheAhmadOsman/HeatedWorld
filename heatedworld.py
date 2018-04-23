@@ -2,15 +2,15 @@
 #   Author: Ahmad M. Osman                                                  #
 #   Date: 04/17/2018                                                        #
 #                                                                           #
-#   Project: NewsMaps                                                       #
-#   Purpose: World News' Heat Maps.                                         #
+#   Project: HeatedWorld                                                    #
+#   Purpose: World News' Heated Map.                                        #
 #                                                                           #
-#                           https://www.newsmaps.xyz                        #
-#                  https://github.com/Ahmad-Magdy-Osman/NewsMaps            #
+#                           https://www.heated.world                        #
+#                  https://github.com/Ahmad-Magdy-Osman/HeatedWorld         #
 #                                                                           #
-#   Filename: newsmaps.py                                                   #
-#   File functionality: This file executes all necessary steps to prepare   #
-#                       Date to be visualized on NewsMaps.xyz               #
+#   Filename: heatedworld.py                                                #
+#   File overview: This file executes all necessary steps to prepare        #
+#                       Date to be visualized on Heated.World               #
 #                                                                           #
 #############################################################################
 
@@ -32,19 +32,20 @@ app = Flask(__name__)
 
 def save_json(day, week):
     logging.info("Ongoing...")
+    # Combining day's submissions and week's into one dictionary
+    submissions = {**day.submissions, **week.submissions}
     with open('data.json', 'w') as outfile:
-        json.dump(day._submissions, outfile)
-        json.dump(week._submissions, outfile)
+        json.dump(submissions, outfile)
 
 
 def save_json_map(week):
     logging.info("Ongoing...")
     with open('map.json', 'w') as outfile:
-        json.dump(week._countries, outfile)
+        json.dump(week.countries, outfile)
 
 
-def map_elements():
-    logging.basicConfig(filename='newsmaps.log', level=logging.INFO,
+def heatedworld():
+    logging.basicConfig(filename='heatedworld.log', level=logging.INFO,
                         format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 
     logging.info("--------------------")
@@ -101,12 +102,12 @@ def map_elements():
     logging.info("--------------------\n")
 
 
-map_elements()
+heatedworld()
 scheduler = BackgroundScheduler()
 scheduler.start()
 scheduler.add_job(
-    func=map_elements,
-    trigger=IntervalTrigger(weeks=1),
+    func=heatedworld,
+    trigger=IntervalTrigger(hours=1),
     id='getting_elements',
     name='getting elements',
     replace_existing=True)

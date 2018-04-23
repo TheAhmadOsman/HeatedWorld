@@ -2,14 +2,14 @@
 #   Author: Ahmad M. Osman                                                  #
 #   Date: 04/10/2018                                                        #
 #                                                                           #
-#   Project: NewsMaps                                                       #
+#   Project: Heated World                                                   #
 #   Purpose: World News' Heat Maps.                                         #
 #                                                                           #
-#                           https://www.newsmaps.xyz                        #
-#                  https://github.com/Ahmad-Magdy-Osman/NewsMaps            #
+#                           https://www.heated.world                        #
+#                  https://github.com/Ahmad-Magdy-Osman/HeatedWorld         #
 #                                                                           #
 #   Filename: reddit.py                                                     #
-#   File functionality: Connecting to and fetching news from Reddit         #
+#   File overview: Connecting to and fetching news from Reddit              #
 #                                                                           #
 #############################################################################
 
@@ -23,8 +23,8 @@ from newspaper import Article
 from geotext import GeoText
 
 # Reddit Client Variables
-USERAGENT = ("NewsMaps 1.0 by /u/XMasterrrr" +
-             "https://github.com/Ahmad-Magdy-Osman/NewsMaps")
+USERAGENT = ("HeatedWorld 1.0 by /u/XMasterrrr" +
+             "https://github.com/Ahmad-Magdy-Osman/HeatedWorld")
 CLIENT_ID = config.CLIENT_ID
 CLIENT_SECRET = config.CLIENT_SECRET
 USERNAME = config.USERNAME
@@ -39,12 +39,25 @@ class Reddit:
             subreddit {string} -- subreddit in string
             time {string} -- either day or week
         """
+
         logging.info("Ongoing...")
+
         self._subreddit = subreddit
         self._time = time
-        self.redditClient()
-        self._submissions = {}
+
+        # Initiating client
+        logging.info("Logging in...")
+        self._reddit = praw.Reddit(client_id=CLIENT_ID, client_secret=CLIENT_SECRET,
+                                   password=PASSWORD, user_agent=USERAGENT,
+                                   username=USERNAME)
+        logging.info("Logged in with: /u/" + str(self._reddit.user.me()))
+
+        # Preparing CSV filename - this file is solely for debugging purposes
         self._filename = self._subreddit + "_" + self._time + ".csv"
+
+        # Dictionary of headlines with their text and geographical analysis
+        self._submissions = {}
+        # Dictionary for countries along with their votes. These votes will be used to heat the world map.
         self._countries = {}
 
     @property
@@ -64,21 +77,42 @@ class Reddit:
         self._time = time
 
     @property
+    def reddit(self):
+        return self._reddit
+
+    @reddit.setter
+    def reddit(self, reddit):
+        self._reddit = reddit
+
+    @property
     def filename(self):
         return self._filename
 
-    def redditClient(self):
-        logging.info("Logging in...")
-        self._reddit = praw.Reddit(client_id=CLIENT_ID, client_secret=CLIENT_SECRET,
-                                   password=PASSWORD, user_agent=USERAGENT,
-                                   username=USERNAME)
-        logging.info("Logged in with: /u/" + str(self._reddit.user.me()))
+    @filename.setter
+    def filename(self, filename):
+        self._filename = filename
+
+    @property
+    def submissions(self):
+        return self._submissions
+
+    @submissions.setter
+    def submissions(self, submissions):
+        self._submissions = submissions
+
+    @property
+    def countries(self):
+        return self._countries
+
+    @countries.setter
+    def countries(self, countries):
+        self._countries = countries
 
     def fetch(self, queryLimit):
         logging.info("Ongoing...")
         for submission in self._reddit.subreddit(self._subreddit).top(self._time, limit=queryLimit):
             # print(vars(submission))  # to get a list of the fields of an object
-            # We will be saving the following data for up to the queryLimit of the specified time of the specified subreddit
+            # We will be saving the following data for up to the queryLimit of the specified time of the specified subreddit, in addition to our created fields.
             '''{'title': 'Shell predicted dangers of climate change in 1980s and knew fossil fuel industry was responsible: Authors of confidential documents envisage changes to sea level and weather ‘larger than any that have occurred over the past 12,000 years’.',
             'score': 48748,
             'permalink': '/r/worldnews/comments/8ax9bd/shell_predicted_dangers_of_climate_change_in/',
@@ -104,9 +138,11 @@ class Reddit:
                         submission.score * (1 - (submission_days/7)))
                 else:
                     calculated_score = submission.score
-            else:
+            elif self._time == "day":
                 submission_days = 1
                 calculated_score = submission.score
+            else:
+                return None
 
             self._submissions[calculated_score] = {"calculated_score": calculated_score, "submission.score": submission.score, "submission.title": submission.title, "submission_days": submission_days, "submission.permalink": (
                 "https: // www.reddit.com /" + submission.permalink), "submission.url": submission.url, "submission.domain": submission.domain, "submission.created_utc": submission.created_utc, "submission.num_comments": submission.num_comments}
