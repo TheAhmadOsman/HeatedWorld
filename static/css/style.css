@@ -1,7 +1,8 @@
 body {
     background-color: #e2edff;
+    font-family: "Raleway";
+    text-align: "center";
 }
-
 .modal {
     display: none;
     /* Hidden by default */

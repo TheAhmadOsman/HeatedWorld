@@ -50,80 +50,80 @@ def heatmap_json(day, week):
         json.dump(votes, outfile)
 
 
-def heatedworld():
-    logging.basicConfig(filename='data/heatedworld.log', level=logging.INFO,
-                        format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
+# def heatedworld():
+#     logging.basicConfig(filename='data/heatedworld.log', level=logging.INFO,
+#                         format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 
-    logging.info("--------------------")
-    logging.info("-------------")
-    logging.info("Script starting...\n")
+#     logging.info("--------------------")
+#     logging.info("-------------")
+#     logging.info("Script starting...\n")
 
-    logging.info("Initiating client for the day's submssions...")
-    # subreddit followed by day/week
-    redditDay = Reddit("worldnews", "day")
-    logging.info("Client initiated.")
+#     logging.info("Initiating client for the day's submssions...")
+#     # subreddit followed by day/week
+#     redditDay = Reddit("worldnews", "day")
+#     logging.info("Client initiated.")
 
-    logging.info("Fetching...")
-    redditDay.fetch(40)
-    logging.info("Fetched.")
+#     logging.info("Fetching...")
+#     redditDay.fetch(40)
+#     logging.info("Fetched.")
 
-    logging.info("Getting context...")
-    redditDay.get_context()
-    logging.info("Context saved.")
+#     logging.info("Getting context...")
+#     redditDay.get_context()
+#     logging.info("Context saved.")
 
-    logging.info("Saving data to CSV...")
-    redditDay.save()
-    logging.info("Saved day's submissions.\n")
+#     logging.info("Saving data to CSV...")
+#     redditDay.save()
+#     logging.info("Saved day's submissions.\n")
 
-    logging.info("----------------------------------------------\n")
+#     logging.info("----------------------------------------------\n")
 
-    logging.info("Initiating client for the week's submssions...")
-    # subreddit followed by day/week
-    redditWeek = Reddit("worldnews", "week")
-    logging.info("Client initiated.")
+#     logging.info("Initiating client for the week's submssions...")
+#     # subreddit followed by day/week
+#     redditWeek = Reddit("worldnews", "week")
+#     logging.info("Client initiated.")
 
-    logging.info("Fetching...")
-    redditWeek.fetch(120)
-    logging.info("Fetched.")
+#     logging.info("Fetching...")
+#     redditWeek.fetch(120)
+#     logging.info("Fetched.")
 
-    logging.info("Getting context...")
-    redditWeek.get_context()
-    logging.info("Context saved.")
+#     logging.info("Getting context...")
+#     redditWeek.get_context()
+#     logging.info("Context saved.")
 
-    logging.info("Saving data to CSV...")
-    redditWeek.save()
-    logging.info("Saved week's submissions.\n")
+#     logging.info("Saving data to CSV...")
+#     redditWeek.save()
+#     logging.info("Saved week's submissions.\n")
 
-    logging.info("----------------------------------------------\n")
+#     logging.info("----------------------------------------------\n")
 
-    logging.info("Saving submissions to JSON file...")
-    submissions_json(redditDay, redditWeek)
-    logging.info(("Saved Submissions JSON file.\n"))
+#     logging.info("Saving submissions to JSON file...")
+#     submissions_json(redditDay, redditWeek)
+#     logging.info(("Saved Submissions JSON file.\n"))
 
-    logging.info("----------------------------------------------\n")
+#     logging.info("----------------------------------------------\n")
 
-    logging.info("Saving heatmap values to JSON file...")
-    heatmap_json(redditDay, redditWeek)
-    logging.info(("Saved heatmap JSON file.\n"))
+#     logging.info("Saving heatmap values to JSON file...")
+#     heatmap_json(redditDay, redditWeek)
+#     logging.info(("Saved heatmap JSON file.\n"))
 
-    logging.info("Script finished.")
-    logging.info("-------------")
-    logging.info("--------------------\n")
+#     logging.info("Script finished.")
+#     logging.info("-------------")
+#     logging.info("--------------------\n")
 
 
-if not os.path.exists("data"):
-    os.mkdir("data")
-heatedworld()
-scheduler = BackgroundScheduler()
-scheduler.start()
-scheduler.add_job(
-    func=heatedworld,
-    trigger=IntervalTrigger(hours=1),
-    id='getting_elements',
-    name='getting elements',
-    replace_existing=True)
-# Shut down the scheduler when exiting the app
-atexit.register(lambda: scheduler.shutdown())
+# if not os.path.exists("data"):
+#     os.mkdir("data")
+# heatedworld()
+# scheduler = BackgroundScheduler()
+# scheduler.start()
+# scheduler.add_job(
+#     func=heatedworld,
+#     trigger=IntervalTrigger(hours=1),
+#     id='getting_elements',
+#     name='getting elements',
+#     replace_existing=True)
+# # Shut down the scheduler when exiting the app
+# atexit.register(lambda: scheduler.shutdown())
 
 
 @app.route('/')
