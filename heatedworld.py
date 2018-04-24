@@ -123,5 +123,21 @@ def homepage():
     return render_template("index.html")
 
 
+@app.route('/data')
+def fetchData():
+    f = open("data/submissions.json", "r")
+    content = f.read()
+    f.close()
+    return content
+
+
+@app.route('/map')
+def fetchMap():
+    f = open("data/mapvotes.json", "r")
+    content = f.read()
+    f.close()
+    return content
+
+
 if __name__ == '__main__':
     app.run(debug=True, port=5001)
