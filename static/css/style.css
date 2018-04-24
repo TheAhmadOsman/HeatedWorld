@@ -1,22 +1,32 @@
-body{
+body {
     background-color: #e2edff;
 }
 
 .modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    padding-top: 20%; /* Location of the box */
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 1;
+    /* Sit on top */
+    padding-top: 20%;
+    /* Location of the box */
     left: 0;
     top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0);
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Black w/ opacity */
 }
 
 /* Modal Content */
+
 .modal-content {
     background-color: #fefefe;
     margin: auto;
@@ -26,6 +36,7 @@ body{
 }
 
 /* The Close Button */
+
 .close {
     color: #aaaaaa;
     float: right;
@@ -39,12 +50,14 @@ body{
     text-decoration: none;
     cursor: pointer;
 }
+
 .h2 {
-    color:black;
+    color: black;
     font-weight: bold;
     font-family: helvetica;
 }
-#map{
+
+#map {
     color: black;
     position: relative;
     width: 100%;
