@@ -8,10 +8,10 @@ function map(){
         let values = []
 
         //fetching values to determine min/max
-        readJSON("/maps")
+        readJSON("/map")
         readJSON("/data")
 
-        var valueDict = JSON.parse(localStorage.getItem("/maps"))
+        var valueDict = JSON.parse(localStorage.getItem("/map"))
         for (let item in valueDict){
           values.push(valueDict[item])
         }
@@ -89,9 +89,28 @@ function map(){
                 let popupHead = document.getElementById("popupHead")
                 let popupBody = document.getElementById("popupBody")
                 let popupFoot = document.getElementById("popupFoot")
-                popupHead.innerHTML = "You clicked on " + fullCountry
-                popupBody.innerHTML = fullCountry + "'s 3 letter ISO is " + iso
-
+                popupHead.innerHTML = "News from " + fullCountry
+                //building the data dictionary from localStorage
+                var dataDict = JSON.parse(localStorage.getItem("/data"))
+                console.log(dataDict)
+                popupString = ""
+                var countryDict = dataDict[fullCountry]
+                for (article in countryDict){
+                  let title = countryDict["submission.title"]
+                  let link = countryDict["submission.url"]
+                  let score = countryDict["submission.score"]
+                  let comments = countryDict["submission.num_comments"]
+                  //Spaces in reddit
+                  let reddit = countryDict["submission.permalink"]
+                  let photo = "https://img.thedailybeast.com/image/upload/c_crop,d_placeholder_euli9k,h_1440,w_2560,x_0,y_0/dpr_2.0/c_limit,w_740/fl_lossy,q_auto/v1491846321/cheats/2017/02/02/matthew-mcconaughey-time-to-embrace-trump/170202-mcconaughey-trump-bbc-cheat_dfukwc"
+                  popupString = popupString + "<h5><b><a href=" + link + " target=_blank>" +
+                  title + "</a></b></h5>" + "<p><a href=" + reddit +
+                  " target=_blank> Number of comments: " + 
+                  comments + "</a></p><p><a href=" + reddit + 
+                  " target=_blank> Number of likes: " + score + "</a></p>" +
+                  "<img src=" + photo + " alt=Photo </img>"
+                }
+              popupBody.innerHTML = popupString;
             });
           }
         })
