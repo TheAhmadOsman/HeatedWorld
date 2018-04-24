@@ -14,9 +14,9 @@
 - Creating world heatmap
   - [Datamaps](http://datamaps.github.io/)
   - Heatmap depends on Reddit's post date(on scale of 1-7) + the number of votes; formula = 1-(n/7). Past 24 hours news should create the initial heatmap first based on votes, and from their a ratio can be taken for the amount of heat the older news will get.
-- Creating submaps for each country, with headlines and links to articles and reddit discusions
-  - Again, this should be a heatmap based on the previously stated logic.
 - Potential ideas
+  - Creating submaps for each country, with headlines and links to articles and reddit discusions
   - Tags' maps, not just location maps. Doesn't have to be a heatmap though.
+
 - Digital Ocean
   - Python3 and Docker...

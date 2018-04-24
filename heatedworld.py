@@ -64,7 +64,7 @@ def heatedworld():
     logging.info("Client initiated.")
 
     logging.info("Fetching...")
-    redditDay.fetch(50)
+    redditDay.fetch(40)
     logging.info("Fetched.")
 
     logging.info("Getting context...")
