@@ -17,6 +17,7 @@
 - Potential ideas
   - Creating submaps for each country, with headlines and links to articles and reddit discusions
   - Tags' maps, not just location maps. Doesn't have to be a heatmap though.
-
+  - We can have seperate maps for the last 24 hours and the whole week.
+  - List for our calculated scores, last 24 hours, and last 7 days headlines
 - Digital Ocean
   - Python3 and Docker...

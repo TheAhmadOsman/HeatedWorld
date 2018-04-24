@@ -1,40 +1,194 @@
-<html>
+<!DOCTYPE html>
+
+<!--
+	Heated World
+    Author: Ahmad M. Osman
+    File name: index.html
+-->
+
+<html lang="en">
 
 <head>
-    <title>Where's News?</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
-    <script src="../static/js/datamaps.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="../static/js/isoDict.js" type="text/javascript"></script>
-    <script src="../static/js/map.js" type="text/javascript"></script>
+    <!-- Basic Info -->
+    <title>Heated World &ndash; The World News Aggregator That You Always Needed</title>
+    <link type="image/x-icon" href="../static/favicon.ico" rel="shortcut icon">
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+    <meta name="description" content="World Map Heated Based on Trending News.">
+    <meta name="author" content="Ahmad M. Osman">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
+        crossorigin="anonymous">
+
+    <!-- My CSS -->
     <link type="text/css" href="../static/css/style.css" rel="stylesheet">
-    <!--New js file -->
-    <script src="../static/js/readJSON.js" type="text/javascript"></script>
-    <script src="../static/js/stats.js" type="text/javascript"></script>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
 </head>
 
-<body onload="map()">
-    <div class="container">
-        <h1 class="col-md-8 col-md-offset-4">Where's the News?</h1>
+<body onload="map()" data-target=".navbar" data-offset="50">
+    <nav class="navbar navbar-toggleable-md navbar-expand-lg navbar navbar-dark bg-dark fixed-top text-uppercase">
+        <div class="container">
+            <a class="navbar-brand" href="#appname">Heated World</a>
+            <button class="navbar-toggler" data-target="#navbarSupportedContent" data-toggle="collapse" type="button" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#appname">Home
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#map">News Map</a>
+                    </li>
+                    <!--
+                    <li class="nav-item">
+                        <a class="nav-link" href="#list">News List</a>
+                    </li>
+                    -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">What Is This?</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" target="_blank" href="https://github.com/Ahmad-Magdy-Osman/HeatedWorld/">GitHub</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contributors">Contributors</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contactus">Contact Us</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-        <div class="col-md-12" id="map"></div>
+    <div class="jumbotron" id="appname">
+        <h1 class="text-center align-top">
+            <b>Heated World</b>
+        </h1>
+        <h3 class="text-center align-top">
+            World News from People to People.
+        </h3>
+        <h5 class="text-center align-top">World Map Heated Based on Trending News &ndash; Browse News by Clicking on Map Locations or Go Through the List Underneath
+            &ndash; Articles' Summaries Included.</h5>
+    </div>
+
+    <div class="container">
+        <div class="col-md-12" style="height: 800px;" id="map"></div>
         <div class="modal" id="popup">
             <div class="modal-content">
                 <div class="modal-header">
+                    <h2 id="popupHead" class="modal-title"></h2>
                     <span class="close" id="close">&times;</span>
-                    <h2 id="popupHead"></h2>
                 </div>
                 <div class="modal-body" id="popupBody"></div>
-                <div class="modal-footer">
+                <div class="modal-footer flex-center">
+                    <p>
+                        <button class="btn btn-default btn-xs text-center" id="closebtn" data-dismiss="modal" type="button">Close</button>
+                    </p>
                     <h3 id="popupFoot"></h3>
                 </div>
             </div>
         </div>
     </div>
+
+    <div class="jumbotron" id="list">
+        <!--
+        <h1 class="text-center">News List</h1>
+        table tablett tablettt
+        <h1>
+            asd
+        </h1>
+        <h2>
+            asd
+        </h2>
+        table tablett tablettt
+        <h1>
+            asd
+        </h1>
+        <h2>
+            asd
+        </h2>
+        -->
+    </div>
+
+    <div class="container" id="about">
+        <h2 class="text-center align-top">
+            <b>What Is This?</b>
+        </h2>
+        <p class="align-top" align="justify">
+            One of the reasons I love
+            <a href="https://www.reddit.com/">Reddit</a> is that it feels like a place for everybody &ndash; a place for the citizens of the world. It is amusing,
+            and at the same time very informative. Over the past year I have drifted from Facebook and its alike to Reddit.
+            I spend most of free my time on it, either surfing my feed or visiting subreddits of my interest. Millions browse
+            Reddit everyday, either to submit new content to their favorite subreddits, or to contribute in discussions and/or
+            upvote content. This, for me, is a form of natural selection. Good/important/intresting content live by getting
+            upvoted and being discussed, causing that content to trend, while the useless content gets lost in the process.
+            The
+            <a href="https://www.reddit.com/r/worldnews/">WorldNews Subreddit</a> is a great example of a subreddit that I am always browsing. I first knew of the Facebook–Cambridge
+            Analytica data scandal via this subreddit, and I believe that it was one of the accelerators that caused the
+            spread of information about this scandel. In my view, the Worldnews subreddit is one of the most important news
+            aggregators ever. It is filtered by humans to humans, not just as in how many times a headline was openned, but
+            rather as in how many times has it been upvotted and how many comments/discussions does it have. With that in
+            mind, I am more of a visual person, and having the news visualized on the World Map, telling me where are the
+            news and what places are heated, and being able to locate news by clicking on countries, seemed like something
+            I am always missing. Besides that I usually do not have time to read the articles beyond just the headlines,
+            so also a way to summarize article contents seemed cruicial. From there, I decided to start Heated World, The
+            World News Aggregator That You Always Needed, to fill in the gaps for all those missing features I have always
+            needed.
+            <p align="right">&ndash; Ahmad M. Osman</p>
+
+        </p>
+    </div>
+
+    <div class="jumbotron" id="contributors">
+        <h1 class="text-center">Contributors</h1>
+        <p class="text-center">Up to this point we have two contriubutors.
+            <br> Ahmad M. Osman:
+            <a href="https://www.linkedin.com/in/ahmadmagdyosman/">LinkedIn</a> &ndash;
+            <a href="https://github.com/Ahmad-Magdy-Osman/">GitHub</a>.
+            <br> Austin Resee:
+            <a href="https://github.com/austinreese1998">GitHub</a>.
+        </p>
+    </div>
+
+    <div class="container" id="contactus">
+        <h1 class="text-center">Contact Us</h1>
+        <p class="text-center">To get in touch with us, please email
+            <a href="mailto:ahmad.osman@luther.edu">ahmad.osman@luther.edu</a>.
+        </p>
+    </div>
+
+    <div class="panel panel-info margin-y-lg ">
+        <footer class="panel-heading margin-y-lg text-center align-top bg-dark" id="footer">
+            <b>Heated World &copy; 2018</b>
+        </footer>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.js "></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js " integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ "
+        crossorigin="anonymous "></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js " integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm "
+        crossorigin="anonymous "></script>
+
+    <!-- Datamaps JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js "></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js "></script>
+    <script src="../static/js/datamaps.js "></script>
+
+    <!-- My JS -->
+    <script src="../static/js/map.js " type="text/javascript "></script>
+    <script src="../static/js/readJSON.js " type="text/javascript "></script>
+    <script src="../static/js/stats.js " type="text/javascript "></script>
 </body>
 
 </html>

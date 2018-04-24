@@ -9,7 +9,7 @@
 #                  https://github.com/Ahmad-Magdy-Osman/HeatedWorld         #
 #                                                                           #
 #   Filename: reddit.py                                                     #
-#   File overview: Connecting to and fetching news from Reddit              #
+#   File overview: Connecting to and fetching data from Reddit              #
 #                                                                           #
 #############################################################################
 
@@ -20,7 +20,7 @@ import config
 import praw
 
 from newspaper import Article
-from geotext import GeoText
+from mordecai import Geoparser
 
 # Reddit Client Variables
 USERAGENT = ("HeatedWorld 1.0 by /u/XMasterrrr" +
@@ -59,6 +59,8 @@ class Reddit:
         self._submissions = {}
         # Dictionary for countries along with their votes. These votes will be used to heat the world map.
         self._countries = {}
+        # Dictionary for countries along with their headlines.
+        self._headlines = {}
 
     @property
     def subreddit(self):
@@ -108,6 +110,14 @@ class Reddit:
     def countries(self, countries):
         self._countries = countries
 
+    @property
+    def headlines(self):
+        return self._headlines
+
+    @headlines.setter
+    def headlines(self, headlines):
+        self._headlines = headlines
+
     def fetch(self, queryLimit):
         logging.info("Ongoing...")
         for submission in self._reddit.subreddit(self._subreddit).top(self._time, limit=queryLimit):
@@ -123,6 +133,7 @@ class Reddit:
             'ups': 48748,
             'num_comments': 2287}'''
 
+            # Calculating submission vote score
             if self._time == "week":
                 submission_days = (
                     (time.time() - (submission.created_utc - 60*61)) // (24*60*60)) + 1
@@ -144,8 +155,8 @@ class Reddit:
             else:
                 return None
 
-            self._submissions[calculated_score] = {"calculated_score": calculated_score, "submission.score": submission.score, "submission.title": submission.title, "submission_days": submission_days, "submission.permalink": (
-                "https: // www.reddit.com /" + submission.permalink), "submission.url": submission.url, "submission.domain": submission.domain, "submission.created_utc": submission.created_utc, "submission.num_comments": submission.num_comments}
+            self._submissions[calculated_score] = {"calculated_score": calculated_score, "submission.score": submission.score, "submission.title": submission.title, "submission_days": submission_days, "submission.permalink": str(
+                "https: // www.reddit.com /" + submission.permalink).replace(" ", ""), "submission.url": submission.url.replace(" ", ""), "submission.domain": submission.domain, "submission.created_utc": submission.created_utc, "submission.num_comments": submission.num_comments}
 
     def get_context(self):
         logging.info("Ongoing...")
@@ -158,8 +169,15 @@ class Reddit:
                 value["article.authors"] = article.authors
                 value["article.text"] = article.text
 
-                places = GeoText(article.text)
-                for country in set(places.countries):
+                geo = Geoparser()
+                places = geo.geoparse(article.text)
+
+                countries_in_article = set()
+
+                for country in places:
+                    countries_in_article.add(country["country_predicted"])
+
+                for country in countries_in_article:
                     if not str(country) in self._countries:
                         self._countries[str(
                             country)] = value["calculated_score"]
@@ -170,11 +188,21 @@ class Reddit:
                 value["article.top_image"] = article.top_image
                 value["article.summary"] = article.summary
                 value["article.keywords"] = article.keywords
-                value["article.countries"] = places.countries
+                value["article.countries"] = list(countries_in_article)
             except Exception as e:
                 logging.info("Error: " + str(e))
 
-    def save(self):
+    def country_news(self):
+        logging.info("Ongoing....")
+        for value in self._submissions.values():
+            value_dict = {"submission.score": value["submission.score"], "submission.title": value["submission.title"], "submission.permalink": value["submission.permalink"], "submission.url": value["submission.url"],
+                          "submission.domain": value["submission.domain"], "submission.num_comments": value["submission.num_comments"], "article.top_image": value["article.top_image"], "article.summary": value["article.summary"]}
+            for country in value["article.countries"]:
+                if not str(country) in self._headlines:
+                    self._headlines[str(country)] = []
+                self._headlines[str(country)].append(value_dict)
+
+    def save_csv(self):
         logging.info("Ongoing...")
         with open(str("data/" + self._filename), 'w') as csvfile:
             fieldnames = ["calculated_score", "submission.score", "submission.title", "submission_days", "submission.permalink", "submission.url", "submission.domain",

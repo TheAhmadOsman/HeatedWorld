@@ -1,18 +1,19 @@
-//example data copied from server
+// Generating the heated world map and fetching news headlines for each country.
 function map() {
-
-    // expected arrangment: {"countryName": {"fillColor": #colorcode,
-    // "numberOfWhatever": num}}
+    // Countries alongside their number of votes and selected filling colors.
     let dataSet = {};
-
+    // Votes values for statistical calculations
     let values = [];
 
-    readJSON("/map");
-    readJSON("/data");
+    // Reading number of votes from its app route
+    readJSON("/votes");
+    // Reading the headlines for each country from its app route
+    readJSON("/news");
 
-    var valueDict = JSON.parse(localStorage.getItem("/map"));
+    // Starting statistical calculations
+    var valueDict = JSON.parse(localStorage.getItem("/votes"));
 
-    //fetching values to determine min/max
+    // Fetching values to determine min/max
     for (let item in valueDict) {
         values.push(valueDict[item]);
     }
@@ -20,41 +21,31 @@ function map() {
     var minValue = Math.min(...values);
     var maxValue = Math.max(...values);
 
+    // Deciding min and max colors
     var minColor = "#FFFFB2";
-    var maxColor = "#BD0026";
+    var maxColor = "#80001a";
 
-    // using d3 scale module to build a scale between dark green (light) and dark
-    // red (heavy)
+    /* Using d3 scale module to build a scale between minColor and maxColor based on the min and max number of upvotes */
     var colorScale = d3
         .scale
         .linear()
         .domain([minValue, maxValue])
         .range([minColor, maxColor]);
 
+    // Statistical calculations for colors
     var halfWay = Median(values);
     var two = Quartile_25(values);
     var four = Quartile_75(values);
 
-    //fetch country/value and popluate the dataSet
+    //Fetch country/value and popluate the dataSet
     var fills = {};
     for (let item in valueDict) {
         let country = item;
         let val = valueDict[item];
-        if (country == "United States of America") {
-            country = "United States";
-        }
-        dataSet[getIsoThree(country)] = {
+        dataSet[country] = {
             "fillColor": colorScale(val),
-            "numberOfWhatever": val
+            "numberOfVotes": val
         };
-    }
-    for (let item in isoCountries) {
-        if (getIsoThree(item) in dataSet) {} else {
-            dataSet[getIsoThree(item)] = {
-                "fillColor": minColor,
-                "numberOfWhatever": 0
-            };
-        }
     }
 
     //generate a map
@@ -62,23 +53,24 @@ function map() {
         element: document.getElementById("map"),
         responisve: true,
         fills: {
-            defaultFill: "#FFFFB2",
+            defaultFill: "#ffffe6",
             minValue: "#FFFFB2",
-            two: "#EFBF8F",
-            halfWay: "#DE806C",
-            four: "#CE4049",
-            maxValue: "#BD0026"
+            two: "#DE806C",
+            halfWay: "#CE4049",
+            four: "#BD0026",
+            maxValue: "#80001a"
         },
         data: dataSet,
         projection: "mercator",
         geographyConfig: {
             highlightFillColor: '#565656',
+            highlightBorderColor: '#444',
             borderColor: '#444',
             borderWidth: 0.5,
             popupTemplate: function (geo, data) {
                 return [
-                    '<div class="hoverinfo"><strong>', 'Number of upvotes in ' + geo.properties.name,
-                    ': ' + data.numberOfWhatever,
+                    '<div class="hoverinfo"><strong>', 'Number of people discussing ' + geo.properties.name,
+                    ': ' + data.numberOfVotes,
                     '</strong></div>'
                 ].join('');
             }
@@ -88,16 +80,15 @@ function map() {
                 .svg
                 .selectAll('.datamaps-subunit')
                 .on('click', function (geography) {
-                    //triggered by clicking on a country
-                    /*                    let link = "popup.html#"
-                          link = link + geography.properties.name
-                          window.open(link, "_blank");*/
                     let fullCountry = geography.properties.name;
-                    let iso = getIsoThree(fullCountry);
                     let popup = document.getElementById("popup");
                     let close = document.getElementById("close");
+                    let closebtn = document.getElementById("closebtn");
                     popup.style.display = "block";
                     close.onclick = function () {
+                        popup.style.display = "none";
+                    };
+                    closebtn.onclick = function () {
                         popup.style.display = "none";
                     };
                     window.onclick = function (event) {
@@ -109,30 +100,55 @@ function map() {
                     let popupBody = document.getElementById("popupBody");
                     let popupFoot = document.getElementById("popupFoot");
                     popupHead.innerHTML = "News from " + fullCountry;
+                    popupHead.style.textAlign = "left";
                     //building the data dictionary from localStorage
-                    var dataDict = JSON.parse(localStorage.getItem("/data"));
-                    console.log(dataDict);
+                    var dataDict = JSON.parse(localStorage.getItem("/news"));
                     popupString = "";
-                    var countryDict = dataDict[fullCountry];
+                    var countryDict = dataDict[geography.id];
+                    if (!Array.isArray(countryDict) || !countryDict.length) {
+                        popupString = '<h3 class="text-center">Looks like ' + fullCountry + ' does not have any trending news for now!</h3>';
+                    }
                     for (var article in countryDict) {
-                        let title = countryDict["submission.title"];
-                        let link = countryDict["submission.url"];
-                        let score = countryDict["submission.score"];
-                        let comments = countryDict["submission.num_comments"];
-                        //Spaces in reddit
-                        let reddit = countryDict["submission.permalink"];
-                        let photo = "https://img.thedailybeast.com/image/upload/c_crop,d_placeholder_euli9k,h_1440,w_" +
-                                "2560,x_0,y_0/dpr_2.0/c_limit,w_740/fl_lossy,q_auto/v1491846321/cheats/2017/02/02" +
-                                "/matthew-mcconaughey-time-to-embrace-trump/170202-mcconaughey-trump-bbc-cheat_df" +
-                                "ukwc";
-                        popupString = popupString + "<h5><b><a href=" + link + " target=_blank>" + title + "</a></b></h5><p><a href=" + reddit + " target=_blank> Number of comments: " + comments + "</a></p><p><a href=" + reddit + " target=_blank> Number of likes: " + score + "</a></p><img src=" + photo + " alt=Photo </img>";
+                        let score = countryDict[article]["submission.score"];
+                        let title = countryDict[article]["submission.title"];
+                        let link = countryDict[article]["submission.url"];
+                        let website = countryDict[article]["submission.domain"]
+                        let comments = countryDict[article]["submission.num_comments"];
+                        let reddit = countryDict[article]["submission.permalink"];
+                        let photo = countryDict[article]["article.top_image"];
+                        let summary = countryDict[article]["article.summary"];
+
+                        popupString = popupString + '<div class="jumbotron"><div class="grid-container"><div data-area="article_image' +
+                                '"><img src="' + photo + '" alt="Article Image" style="width:400px;height:400px;border-radius: 25px;"></di' +
+                                'v><div data-area="reddit_info" class="text-center"><br>Number of Reddit Upvotes:' +
+                                ' ' + score + '. </br> Number of Reddit Comments : ' + comments + '. </div><div data-area="reddit_links"><a target="_blank" href="' + reddit + '"><br><h5 class="text-center">Reddit Discussion</h5></a></div><div data-area="ar' +
+                                'ticle_summary"><p align="justify">' + summary + '</p></div><div data-area="article_headline"><a target="_blank" href="' + link + '"><h3 class="text-center"><br><br>' + title + '</h3></a></div></div></div><hr>';
                     }
                     popupBody.innerHTML = popupString;
-
+                    /*
+                        <div class="grid-container">
+                            <div data-area="article_image">
+                                article_image
+                            </div>
+                            <div data-area="reddit_info">
+                                reddit_info
+                            </div>
+                            <div data-area="reddit_links">
+                                reddit_links
+                            </div>
+                            <div data-area="article_summary">
+                                article_summary
+                            </div>
+                            <div data-area="article_headline">
+                                article_headline
+                            </div>
+                        </div>
+                    */
                 });
         }
     });
-    map.legend({
+
+    /* map.legend({
         labels: {
             minValue: minValue,
             two: two,
@@ -140,7 +156,7 @@ function map() {
             four: four,
             maxValue: maxValue
         }
-    });
+    }); */
 
     window.addEventListener('resize', function () {
         map.resize();

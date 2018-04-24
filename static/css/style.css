@@ -1,5 +1,7 @@
 body {
-    background-color: #e2edff;
+    background-color: #e1e6ea;
+    font-family: "Raleway";
+    text-align: "center";
 }
 
 .modal {
@@ -61,5 +63,78 @@ body {
     color: black;
     position: relative;
     width: 100%;
-    height: 78%;
+    height: 100%;
+}
+
+hr {
+    display: block;
+    border-color: rgb(21, 26, 56);
+}
+
+.jumbotron {
+    padding: 2%;
+    margin: 0%;
+}
+
+#footer {
+    padding: 6px;
+}
+
+#about {
+    text-align: center;
+    padding: 20px;
+}
+
+#appname {
+    margin-top: 2%;
+}
+
+.navbar-dark .navbar-nav .nav-item .nav-link {
+    color: white;
+}
+
+.navbar-dark .navbar-nav .nav-item .nav-link:hover {
+    color: grey;
+}
+
+#footer {
+    color: white;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-gap: 1px 1px;
+}
+
+[data-area="article_image"] {
+    grid-area: 1 / 1 / 3 / 1;
+}
+
+[data-area="reddit_info"] {
+    grid-area: 3 / 1 / 3 / 1;
+}
+
+[data-area="reddit_links"] {
+    grid-area: 3 / 2 / 3 / 4;
+}
+
+[data-area="article_summary"] {
+    grid-area: 2 / 2 / 2 / 4;
+}
+
+[data-area="article_headline"] {
+    grid-area: 1 / 2 / 1 / 4;
+}
+
+.flex-center {
+    flex-direction: column;
+    justify-content: center;
+    resize: vertical;
+    overflow: auto;
+}
+
+.flex-center p {
+    margin: 0;
 }
