@@ -8,8 +8,10 @@ function map(){
         let values = []
 
         //fetching values to determine min/max
-        readJSON("../maps.json")
+        readJSON("/maps")
+        readJSON("/data")
 
+        var valueDict = JSON.parse(localStorage.getItem("/maps"))
         for (let item in valueDict){
           values.push(valueDict[item])
         }
