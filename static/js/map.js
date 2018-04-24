@@ -32,13 +32,8 @@ function map() {
         .range([minColor, maxColor]);
 
     var halfWay = Median(values);
-
-    var q1 = Quartile_25(values);
-    var q3 = Quartile_75(values);
-    var iqr = q3 - q1;
-
-    var two = q1 - (1.5 * iqr);
-    var four = q3 + (1.5 * iqr);
+    var two = Quartile_25(values);
+    var four = Quartile_75(values);
 
     //fetch country/value and popluate the dataSet
     var fills = {};
@@ -74,11 +69,6 @@ function map() {
             four: "#CE4049",
             maxValue: "#BD0026"
         },
-        // fills: {defaultFill: "FFFFB2", minValue: "#FFFFB2", two: "#EFC08F", halfWay:
-        // "#DE806C", four: "#CE4049", maxValue: "BD0026"},
-
-        /* fills: {defaultFill: "white", minValue: "#FFFFB2", two: "#EFC08F", halfWay: "#DE806C", four: "#CE4049", maxValue: "#BD0026"},*/
-
         data: dataSet,
         projection: "mercator",
         geographyConfig: {
