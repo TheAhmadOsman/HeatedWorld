@@ -31,9 +31,14 @@ function map() {
         .domain([minValue, maxValue])
         .range([minColor, maxColor]);
 
-    var halfWay = Math.round((maxValue - minValue) * 0.5);
-    var two = Math.round((maxValue - minValue) * 0.25);
-    var four = Math.round((maxValue - minValue) * 0.75);
+    var halfWay = Median(values);
+
+    var q1 = Quartile_25(values);
+    var q3 = Quartile_75(values);
+    var iqr = q3 - q1;
+
+    var two = q1 - (1.5 * iqr);
+    var four = q3 + (1.5 * iqr);
 
     //fetch country/value and popluate the dataSet
     var fills = {};
@@ -62,17 +67,17 @@ function map() {
         element: document.getElementById("map"),
         responisve: true,
         fills: {
-            defaultFill: "FFFFB2",
+            defaultFill: "#FFFFB2",
             minValue: "#FFFFB2",
             two: "#EFBF8F",
             halfWay: "#DE806C",
             four: "#CE4049",
-            maxValue: "BD0026"
+            maxValue: "#BD0026"
         },
         // fills: {defaultFill: "FFFFB2", minValue: "#FFFFB2", two: "#EFC08F", halfWay:
         // "#DE806C", four: "#CE4049", maxValue: "BD0026"},
 
-        /* fills: {defaultFill: "white", minValue: "#FFFFB2", two: "#EFC08F", halfWay: "#DE806C", four: "#CE4049", maxValue: "BD0026"},*/
+        /* fills: {defaultFill: "white", minValue: "#FFFFB2", two: "#EFC08F", halfWay: "#DE806C", four: "#CE4049", maxValue: "#BD0026"},*/
 
         data: dataSet,
         projection: "mercator",

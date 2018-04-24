@@ -20,11 +20,10 @@ import json
 import requests
 import atexit
 import os
-
+from collections import Counter
 from flask import Flask, Response, render_template, request, jsonify
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.interval import IntervalTrigger
-
 from reddit import Reddit
 
 
@@ -33,16 +32,22 @@ app = Flask(__name__)
 
 def submissions_json(day, week):
     logging.info("Ongoing...")
+
     # Combining day's submissions and week's into one dictionary
     submissions = {**day.submissions, **week.submissions}
+
     with open('data/submissions.json', 'w') as outfile:
         json.dump(submissions, outfile)
 
 
-def heatmap_json(week):
+def heatmap_json(day, week):
     logging.info("Ongoing...")
+
+    # Combining votes for countries from the day's submissions and the week's (weighed) submissions
+    votes = Counter(day.countries) + Counter(week.countries)
+
     with open('data/mapvotes.json', 'w') as outfile:
-        json.dump(week.countries, outfile)
+        json.dump(votes, outfile)
 
 
 def heatedworld():
@@ -91,12 +96,15 @@ def heatedworld():
 
     logging.info("----------------------------------------------\n")
 
-    logging.info("Saving to JSON file...")
+    logging.info("Saving submissions to JSON file...")
     submissions_json(redditDay, redditWeek)
-    logging.info(("Saved JSON file.\n"))
+    logging.info(("Saved Submissions JSON file.\n"))
 
-    ###
-    heatmap_json(redditWeek)
+    logging.info("----------------------------------------------\n")
+
+    logging.info("Saving heatmap values to JSON file...")
+    heatmap_json(redditDay, redditWeek)
+    logging.info(("Saved heatmap JSON file.\n"))
 
     logging.info("Script finished.")
     logging.info("-------------")
