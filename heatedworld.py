@@ -155,7 +155,7 @@ scheduler = BackgroundScheduler()
 scheduler.start()
 scheduler.add_job(
     func=heatedworld,
-    trigger=IntervalTrigger(hours=24),
+    trigger=IntervalTrigger(hours=3),
     next_run_time=datetime.datetime.now(),
     id='getting_elements',
     name='getting elements',
