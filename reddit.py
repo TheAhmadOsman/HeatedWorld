@@ -195,19 +195,28 @@ class Reddit:
     def country_news(self):
         logging.info("Ongoing....")
         for value in self._submissions.values():
-            value_dict = {"submission.score": value["submission.score"], "submission.title": value["submission.title"], "submission.permalink": value["submission.permalink"], "submission.url": value["submission.url"],
-                          "submission.domain": value["submission.domain"], "submission.num_comments": value["submission.num_comments"], "article.top_image": value["article.top_image"], "article.summary": value["article.summary"]}
-            for country in value["article.countries"]:
-                if not str(country) in self._headlines:
-                    self._headlines[str(country)] = []
-                self._headlines[str(country)].append(value_dict)
+            try:
+                value_dict = {"submission.score": value["submission.score"], "submission.title": value["submission.title"], "submission.permalink": value["submission.permalink"], "submission.url": value["submission.url"],
+                            "submission.domain": value["submission.domain"], "submission.num_comments": value["submission.num_comments"], "article.top_image": value["article.top_image"], "article.summary": value["article.summary"]}
+                for country in value["article.countries"]:
+                    if not str(country) in self._headlines:
+                        self._headlines[str(country)] = []
+                    self._headlines[str(country)].append(value_dict)
+            except:
+                continue
 
     def save_csv(self):
         logging.info("Ongoing...")
         with open(str("data/" + self._filename), 'w') as csvfile:
-            fieldnames = ["calculated_score", "submission.score", "submission.title", "submission_days", "submission.permalink", "submission.url", "submission.domain",
-                          "submission.created_utc", "submission.num_comments", "article.authors", "article.text", "article.top_image", "article.summary", "article.keywords", "article.countries"]
-            out = csv.writer(csvfile, delimiter='\t')
-            out.writerow(fieldnames)
-            for value in self._submissions.values():
-                out.writerow(value.values())
+            try:
+                fieldnames = ["calculated_score", "submission.score", "submission.title", "submission_days", "submission.permalink", "submission.url", "submission.domain",
+                            "submission.created_utc", "submission.num_comments", "article.authors", "article.text", "article.top_image", "article.summary", "article.keywords", "article.countries"]
+                out = csv.writer(csvfile, delimiter='\t')
+                out.writerow(fieldnames)
+                for value in self._submissions.values():
+                    try:
+                        out.writerow(value.values())
+                    except:
+                        continue
+            except:
+                pass
