@@ -194,4 +194,5 @@ def fetch_submissions():
 
 
 if __name__ == '__main__':
+    # heatedworld()
     app.run(debug=True, port=5001, use_reloader=False)

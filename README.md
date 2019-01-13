@@ -44,11 +44,10 @@ Currently, Heated World supports the following:
 
 Heated World                           | Heated World
 :-------------------------:|:-------------------------:
-![Landing Page](img/readme/1-Landing.png)   |  ![Register](img/readme/2-Register.png)
-![Invalid Register](img/readme/3-RegisterFailure.png)  |  ![Paths](img/readme/4-Login.png)
-![Mainpage](img/readme/5-Mainpage.png)  |  ![Searching](img/readme/6-Searching.png)
-
-![Movie](img/readme/7-Movie.png)
+![Main #1](img/readme/1-Main.png)   |  ![Main #2](img/readme/2-Main.png)
+![Heatmap #1](img/readme/3-Heatmap.png)  |  ![Heatmap #2](img/readme/4-Heatmap.png)
+![Articles #1](img/readme/5-Articles.png)  |  ![Articles #2](img/readme/6-Articles.png)
+![Articles #4](img/readme/7-Articles.png)  |  ![Articles #4](img/readme/8-Articles.png)
 
 ![Demo](img/readme/Demo.gif)
 
@@ -100,7 +99,7 @@ The Web App is scheduled to fetch 120 articles from the weekly top posts and 40 
 * Make sure a folder called data is in place `mkdir data`
 * Run the Web App using `python3.6 heatedworld.py`
   * This will take some time, the NLP to find accurate countries from the articles takes a lot of time. There is a file called heatedworld.log within the data folder where you can see that the application is processing data.
-* Visit [http://127.0.0.1:5000/](http://127.0.0.1:5000/)
+* Visit [http://127.0.0.1:5001/](http://127.0.0.1:5001/)
 
 ## Tools :eyeglasses:
 
@@ -145,6 +144,7 @@ Some of the features and functions that would be appropriate for Heated World. P
     * Will require singing in with Reddit account.
   * News List Per Country
     * Dropdown to choose country and all news are in-front of you.
+  * Smarter Sorting for Headlines
 * Style/Design
   * Fonts
   * GitHub Corner
@@ -155,6 +155,7 @@ Some of the features and functions that would be appropriate for Heated World. P
       * Countries, Articles, Articles Daily, and Articles Weekly
     * JSON files are built from the DB after fetching from Reddit and after getting articles summaries and geographical context.
 * Back End
+  * Scheduler Improvements
   * Multi-threading
     * Concurrent connections to the PostgreSQL DB before Articles Processing and Context Extraction.
   * Processing in Batches.
