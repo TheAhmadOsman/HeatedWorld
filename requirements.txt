@@ -45,7 +45,7 @@ preshed==2.0.1
 protobuf==3.6.1
 python-dateutil==2.7.5
 pytz==2018.9
-PyYAML==3.13
+PyYAML==5.4
 regex==2018.1.10
 requests==2.21.0
 requests-file==1.4.3
