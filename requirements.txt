@@ -42,7 +42,7 @@ plac==0.9.6
 praw==6.0.0
 prawcore==1.0.0
 preshed==2.0.1
-protobuf==3.6.1
+protobuf==3.18.3
 python-dateutil==2.7.5
 pytz==2018.9
 PyYAML==3.13
